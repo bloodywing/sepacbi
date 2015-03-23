@@ -36,6 +36,7 @@ class MissingBICError(Exception):
     Raised when a BIC code is needed but not specified.
     """
 
+
 class Transaction(AttributeCarrier):
     """
     Transaction describes a single credit transfer from the debtor's account
@@ -109,17 +110,18 @@ class Transaction(AttributeCarrier):
         """
         root = etree.Element('CdtTrfTxInf')
         pmtid = etree.SubElement(root, 'PmtId')
-        #etree.SubElement(pmtid, 'InstrId').text = self.tx_id
+        # etree.SubElement(pmtid, 'InstrId').text = self.tx_id
+        # etree.SubElement(pmtid, 'EndToEndId').text = self.eeid
         etree.SubElement(pmtid, 'EndToEndId').text = self.eeid
-        #info = etree.SubElement(root, 'PmtTpInf')
-        #purp = etree.SubElement(info, 'CtgyPurp')
-        #etree.SubElement(purp, 'Cd').text = self.category
+        # info = etree.SubElement(root, 'PmtTpInf')
+        # purp = etree.SubElement(info, 'CtgyPurp')
+        # etree.SubElement(purp, 'Cd').text = self.category
         amt = etree.SubElement(root, 'Amt')
         etree.SubElement(
             amt, 'InstdAmt', attrib={'Ccy': 'EUR'}).text = str(self.amount)
         if hasattr(self, 'ultimate_debtor'):
             root.append(self.ultimate_debtor.__tag__('UltmtDbtr'))
-        if self.account.is_foreign():
+        if self.account.is_foreign() or self.bic:
             agt = etree.SubElement(root, 'CdtrAgt')
             agt.append(Bank(bic=self.bic).__tag__())
         root.append(self.creditor.__tag__('Cdtr'))
@@ -218,7 +220,7 @@ class Transaction(AttributeCarrier):
                 start = 0
                 while start < len(self.rmtinfo):
                     records += [self.rmtinfo_record('60', prog,
-                        self.rmtinfo[start:start+90]).format()]
+                                                    self.rmtinfo[start:start + 90]).format()]
         else:
             record_type = '60'
             if len(self.docs) <= 3:
@@ -229,12 +231,12 @@ class Transaction(AttributeCarrier):
                 line += self.docs[i].cbi()
                 if i % 3 == 2:
                     records.append(self.rmtinfo_record(record_type, prog, line
-                        ).format())
+                                                       ).format())
                     line = ''
                 i += 1
             if line != '':
                 records.append(self.rmtinfo_record(record_type, prog, line
-                    ).format())
+                                                   ).format())
             if len(records) > 5:
                 raise Exception('Too many documents for remittance info')
         return records
