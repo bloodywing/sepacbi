@@ -109,11 +109,11 @@ class Transaction(AttributeCarrier):
         """
         root = etree.Element('CdtTrfTxInf')
         pmtid = etree.SubElement(root, 'PmtId')
-        etree.SubElement(pmtid, 'InstrId').text = self.tx_id
+        #etree.SubElement(pmtid, 'InstrId').text = self.tx_id
         etree.SubElement(pmtid, 'EndToEndId').text = self.eeid
-        info = etree.SubElement(root, 'PmtTpInf')
-        purp = etree.SubElement(info, 'CtgyPurp')
-        etree.SubElement(purp, 'Cd').text = self.category
+        #info = etree.SubElement(root, 'PmtTpInf')
+        #purp = etree.SubElement(info, 'CtgyPurp')
+        #etree.SubElement(purp, 'Cd').text = self.category
         amt = etree.SubElement(root, 'Amt')
         etree.SubElement(
             amt, 'InstdAmt', attrib={'Ccy': 'EUR'}).text = str(self.amount)
