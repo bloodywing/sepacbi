@@ -29,13 +29,14 @@ class Account(AttributeCarrier):
     def is_foreign(self):
         """
         Return a boolean value telling whether the IBAN designates a foreign
-        account (from the viewpoint by the Italian banking system).
+        account (from the viewpoint by the German banking system).
         """
-        return self.iban[:2] not in ('IT', 'SM')
+        return self.iban[:2] not in ('DE',)
 
     def perform_checks(self):
         "Validates the IBAN."
         from . import iban
+
         self.clean_iban()
         iban.validate(self.iban)
 

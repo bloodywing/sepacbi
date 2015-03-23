@@ -75,7 +75,7 @@ class Payment(AttributeCarrier):
 
     def add_transaction(self, **kwargs):
         "Adds a transaction to the internal list. Does not return anything."
-        kwargs['payment_seq'] = len(self.transactions)+1
+        kwargs['payment_seq'] = len(self.transactions) + 1
         if not hasattr(self, 'req_id'):
             self.gen_id()
         kwargs['payment_id'] = self.req_id
@@ -122,8 +122,8 @@ class Payment(AttributeCarrier):
                 self.charges_account = Account(iban=self.charges_account)
             assert isinstance(self.charges_account, Account)
 
-        # Todo: if there is an initiator, check that it has a CUC
-        # Todo: if there is no initiator, check that the debtor has a CUC
+            # Todo: if there is an initiator, check that it has a CUC
+            # Todo: if there is no initiator, check that the debtor has a CUC
 
     def amount_sum(self):
         return sum([tx.amount for tx in self.transactions])
@@ -148,20 +148,22 @@ class Payment(AttributeCarrier):
         `envelope` attribute.
         """
         xsi = 'http://www.w3.org/2001/XMLSchema-instance'
-        if self.envelope:
-            tag = 'CBIBdyPaymentRequest'
-        else:
-            tag = 'CBIPaymentRequest'
-        schema = tag + '.00.04.00'
-        #xmlns = 'urn:CBI:xsd:' + schema
+        # if self.envelope:
+        #     tag = 'CBIBdyPaymentRequest'
+        # else:
+        #     tag = 'CBIPaymentRequest'
+        # schema = tag + '.00.04.00'
+        # xmlns = 'urn:CBI:xsd:' + schema
+
+        tag = 'Document'
         xmlns = 'urn:iso:std:iso:20022:tech:xsd:pain.001.003.03'
-        #schema_location = xmlns + ' ' + schema + '.xsd'
+        # schema_location = xmlns + ' ' + schema + '.xsd'
         root = etree.Element(
             '{%s}%s' % (xmlns, tag),
             #attrib={'{%s}schemaLocation' % xsi: schema_location},
             attrib={},
             nsmap={'xsi': xsi, None: xmlns})
-        outer = root
+        outer = etree.SubElement(root, 'CstmrCdtTrfInitn')
         if self.envelope:
             root = etree.SubElement(root, 'CBIEnvelPaymentRequest')
             root = etree.SubElement(root, 'CBIPaymentRequest')
@@ -280,8 +282,8 @@ class Payment(AttributeCarrier):
         records = [header.format()]
         for transaction, i in zip(self.transactions,
                                   range(len(self.transactions))):
-            records += transaction.cbi_records(i+1)
-        footer.records = len(records)+1
+            records += transaction.cbi_records(i + 1)
+        footer.records = len(records) + 1
         records.append(footer.format())
         records.append(u'')
         return '\n'.join(records)

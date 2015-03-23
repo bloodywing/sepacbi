@@ -28,6 +28,7 @@ class Address(AttributeCarrier):
     """
     The postal address of an entity.
     """
+
     def __init__(self, *args):
         """
         The argument processing is NOT based on keyword parameters, so we
@@ -124,9 +125,10 @@ class IdHolder(AttributeCarrier):
 
         # CUC
         if as_initiator:
-            if not hasattr(self, 'cuc'):
-                raise MissingCUCError
-            orgid.append(emit_id_tag(self.cuc, 'CBI'))
+            # if not hasattr(self, 'cuc'):
+            # raise MissingCUCError
+            if hasattr(self, 'cuc'):
+                orgid.append(emit_id_tag(self.cuc, 'CBI'))
 
         # Tax code
         if hasattr(self, 'cf'):
