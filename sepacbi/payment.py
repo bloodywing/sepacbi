@@ -161,7 +161,7 @@ class Payment(AttributeCarrier):
             #attrib={'{%s}schemaLocation' % xsi: schema_location},
             attrib={},
             nsmap={'xsi': xsi, None: xmlns})
-        outer = root
+        outer = etree.SubElement(root, 'Document')
         if self.envelope:
             root = etree.SubElement(root, 'CBIEnvelPaymentRequest')
             root = etree.SubElement(root, 'CBIPaymentRequest')
