@@ -148,14 +148,12 @@ class Payment(AttributeCarrier):
         `envelope` attribute.
         """
         xsi = 'http://www.w3.org/2001/XMLSchema-instance'
-        # if self.envelope:
-        #     tag = 'CBIBdyPaymentRequest'
-        # else:
-        #     tag = 'CBIPaymentRequest'
+        if self.envelope:
+            tag = 'CBIBdyPaymentRequest'
+        else:
+            tag = 'CBIPaymentRequest'
         # schema = tag + '.00.04.00'
         # xmlns = 'urn:CBI:xsd:' + schema
-
-        tag = 'Document'
         xmlns = 'urn:iso:std:iso:20022:tech:xsd:pain.001.003.03'
         # schema_location = xmlns + ' ' + schema + '.xsd'
         root = etree.Element(
