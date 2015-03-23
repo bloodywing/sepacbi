@@ -153,11 +153,13 @@ class Payment(AttributeCarrier):
         else:
             tag = 'CBIPaymentRequest'
         schema = tag + '.00.04.00'
-        xmlns = 'urn:CBI:xsd:' + schema
-        schema_location = xmlns + ' ' + schema + '.xsd'
+        #xmlns = 'urn:CBI:xsd:' + schema
+        xmlns = 'urn:iso:std:iso:20022:tech:xsd:pain.001.003.03'
+        #schema_location = xmlns + ' ' + schema + '.xsd'
         root = etree.Element(
             '{%s}%s' % (xmlns, tag),
-            attrib={'{%s}schemaLocation' % xsi: schema_location},
+            #attrib={'{%s}schemaLocation' % xsi: schema_location},
+            attrib={},
             nsmap={'xsi': xsi, None: xmlns})
         outer = root
         if self.envelope:
@@ -169,7 +171,7 @@ class Payment(AttributeCarrier):
         "Returns the whole XML structure for the payment."
         # Outer XML structure
         outer, root = self.get_xml_root()
-        xmlns = 'urn:CBI:xsd:CBIPaymentRequest.00.04.00'
+        xmlns = 'urn:iso:std:iso:20022:tech:xsd:pain.001.003.03'
 
         # Header
         header = etree.SubElement(root, 'GrpHdr', nsmap={None: xmlns})
