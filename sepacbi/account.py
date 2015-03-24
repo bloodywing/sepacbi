@@ -15,12 +15,14 @@ class Account(AttributeCarrier):
     """
     The Account class represents a bank account, identified by an IBAN.
     """
-    allowed_args = ('iban',)
+    allowed_args = ('iban', 'has_euro_attr')
 
     def __init__(self, *args, **kwargs):
         self.iban = ''
-        if kwargs['has_euro_attr']:
+        if 'has_euro_attr' in kwargs:
             self.put_euro = True
+        else:
+            self.put_euro = False
         super(Account, self).__init__(*args, **kwargs)
         self.clean_iban()
 
