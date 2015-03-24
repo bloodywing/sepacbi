@@ -56,7 +56,7 @@ class Payment(AttributeCarrier):
     """
     allowed_args = (
         'req_id', 'batch', 'high_priority', 'execution_date',
-        'debtor', 'account', 'abi', 'ultimate_debtor', 'charges_account',
+        'debtor', 'account', 'abi', 'ultimate_debtor', 'charges_account', 'bic'
         'envelope', 'initiator')
 
     ID_PREFIX = 'DistintaXml-'
@@ -205,6 +205,9 @@ class Payment(AttributeCarrier):
             svclvl = etree.SubElement(tp_info, 'SvcLvl')
             etree.SubElement(svclvl, 'Cd').text = 'SEPA'
 
+        if self.bic:
+            agt = etree.SubElement(root, 'CdtrAgt')
+            agt.append(Bank(bic=self.bic).__tag__())
 
         # Execution date: either today or specified date
         execution_date = date.today()
