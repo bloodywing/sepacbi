@@ -112,7 +112,7 @@ class Transaction(AttributeCarrier):
         pmtid = etree.SubElement(root, 'PmtId')
         # etree.SubElement(pmtid, 'InstrId').text = self.tx_id
         # etree.SubElement(pmtid, 'EndToEndId').text = self.eeid
-        etree.SubElement(pmtid, 'EndToEndId').text = self.eeid
+        etree.SubElement(pmtid, 'EndToEndId').text = self.creditor
         # info = etree.SubElement(root, 'PmtTpInf')
         # purp = etree.SubElement(info, 'CtgyPurp')
         # etree.SubElement(purp, 'Cd').text = self.category
