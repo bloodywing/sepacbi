@@ -100,7 +100,7 @@ class Payment(AttributeCarrier):
         assert isinstance(self.debtor, IdHolder)
 
         if isinstance(self.account, basestring):
-            self.account = Account(iban=self.account)
+            self.account = Account(iban=self.account, has_euro_attr=True)
         assert isinstance(self.account, Account)
 
         if isinstance(self.bic, basestring):
@@ -156,7 +156,7 @@ class Payment(AttributeCarrier):
         # if self.envelope:
         # tag = 'CBIBdyPaymentRequest'
         # else:
-        #     tag = 'CBIPaymentRequest'
+        # tag = 'CBIPaymentRequest'
         # schema = tag + '.00.04.00'
         # xmlns = 'urn:CBI:xsd:' + schema
         tag = 'Document'
@@ -201,7 +201,7 @@ class Payment(AttributeCarrier):
 
         # # Priority
         # if hasattr(self, 'high_priority'):
-        #     tp_info = etree.SubElement(info, 'PmtTpInf')
+        # tp_info = etree.SubElement(info, 'PmtTpInf')
         #     if hasattr(self, 'high_priority'):
         #         priority_text = 'NORM'
         #         if self.high_priority:
@@ -238,8 +238,8 @@ class Payment(AttributeCarrier):
             agt = etree.SubElement(info, 'CdtrAgt')
             agt.append(self.bic.__tag__())
 
-        agent = etree.SubElement(info, 'DbtrAgt')
-        agent.append(self.bank.__tag__(output_abi=True))
+        #agent = etree.SubElement(info, 'DbtrAgt')
+        #agent.append(self.bank.__tag__(output_abi=True))
 
         # Ultimate debtor
         if hasattr(self, 'ultimate_debtor'):

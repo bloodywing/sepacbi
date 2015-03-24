@@ -19,6 +19,8 @@ class Account(AttributeCarrier):
 
     def __init__(self, *args, **kwargs):
         self.iban = ''
+        if kwargs['has_euro_attr']:
+            self.put_euro = True
         super(Account, self).__init__(*args, **kwargs)
         self.clean_iban()
 
@@ -45,5 +47,6 @@ class Account(AttributeCarrier):
         root = etree.Element(tag)
         acct_id = etree.SubElement(root, 'Id')
         etree.SubElement(acct_id, 'IBAN').text = self.iban
-        etree.SubElement(root, 'Ccy').text = 'EUR'
+        if self.put_euro:
+            etree.SubElement(root, 'Ccy').text = 'EUR'
         return root
