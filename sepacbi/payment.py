@@ -104,7 +104,7 @@ class Payment(AttributeCarrier):
 
         if hasattr(self, 'abi'):
             abi = self.abi
-        elif self.account.iban[:2] == 'IT':
+        elif self.account.iban[:2] == 'DE':
             abi = self.account.iban[5:10]
         else:
             raise MissingABIError('The payment needs an \'abi\' attribute')
