@@ -205,9 +205,6 @@ class Payment(AttributeCarrier):
             svclvl = etree.SubElement(tp_info, 'SvcLvl')
             etree.SubElement(svclvl, 'Cd').text = 'SEPA'
 
-        if self.bic:
-            agt = etree.SubElement(info, 'CdtrAgt')
-            agt.append(Bank(bic=self.bic).__tag__())
 
         # Execution date: either today or specified date
         execution_date = date.today()
