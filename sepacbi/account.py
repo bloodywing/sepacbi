@@ -45,4 +45,5 @@ class Account(AttributeCarrier):
         root = etree.Element(tag)
         acct_id = etree.SubElement(root, 'Id')
         etree.SubElement(acct_id, 'IBAN').text = self.iban
+        etree.SubElement(root, 'Ccy').text = 'EUR'
         return root

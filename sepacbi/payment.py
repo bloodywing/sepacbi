@@ -56,10 +56,11 @@ class Payment(AttributeCarrier):
     """
     allowed_args = (
         'req_id', 'batch', 'high_priority', 'execution_date',
-        'debtor', 'account', 'abi', 'ultimate_debtor', 'charges_account', 'bic'
+        'debtor', 'account', 'abi', 'ultimate_debtor', 'charges_account', 'bic',
         'envelope', 'initiator')
 
-    ID_PREFIX = 'DistintaXml-'
+    # ID_PREFIX = 'DistintaXml-'
+    ID_PREFIX = ''
 
     def __init__(self, **kwargs):
         self.envelope = False
@@ -153,7 +154,7 @@ class Payment(AttributeCarrier):
         """
         xsi = 'http://www.w3.org/2001/XMLSchema-instance'
         # if self.envelope:
-        #     tag = 'CBIBdyPaymentRequest'
+        # tag = 'CBIBdyPaymentRequest'
         # else:
         #     tag = 'CBIPaymentRequest'
         # schema = tag + '.00.04.00'
@@ -196,18 +197,22 @@ class Payment(AttributeCarrier):
         etree.SubElement(info, 'PmtMtd').text = 'TRF'
 
         etree.SubElement(info, 'NbOfTxs').text = str(len(self.transactions))
-        etree.SubElement(info,  'CtrlSum').text = str(self.amount_sum())
+        etree.SubElement(info, 'CtrlSum').text = str(self.amount_sum())
 
-        # Priority
-        if hasattr(self, 'high_priority'):
-            tp_info = etree.SubElement(info, 'PmtTpInf')
-            if hasattr(self, 'high_priority'):
-                priority_text = 'NORM'
-                if self.high_priority:
-                    priority_text = 'HIGH'
-                etree.SubElement(tp_info, 'InstrPrty').text = priority_text
-            svclvl = etree.SubElement(tp_info, 'SvcLvl')
-            etree.SubElement(svclvl, 'Cd').text = 'SEPA'
+        # # Priority
+        # if hasattr(self, 'high_priority'):
+        #     tp_info = etree.SubElement(info, 'PmtTpInf')
+        #     if hasattr(self, 'high_priority'):
+        #         priority_text = 'NORM'
+        #         if self.high_priority:
+        #             priority_text = 'HIGH'
+        #         etree.SubElement(tp_info, 'InstrPrty').text = priority_text
+        #     svclvl = etree.SubElement(tp_info, 'SvcLvl')
+        #     etree.SubElement(svclvl, 'Cd').text = 'SEPA'
+
+        tp_info = etree.SubElement(info, 'PmtTpInf')
+        svclvl = etree.SubElement(tp_info, 'SvcLvl')
+        etree.SubElement(svclvl, 'Cd').text = 'SEPA'
 
 
         # Execution date: either today or specified date
