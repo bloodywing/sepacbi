@@ -191,9 +191,8 @@ class Payment(AttributeCarrier):
         etree.SubElement(info, 'PmtInfId').text = self.req_id
         etree.SubElement(info, 'PmtMtd').text = 'TRF'
 
-        # Batch booking
-        if hasattr(self, 'batch'):
-            etree.SubElement(info, 'BtchBookg').text = booltext(self.batch)
+        etree.SubElement(info, 'NbOfTxs').text = str(len(self.transactions))
+        etree.SubElement(info,  'CtrlSum').text = str(self.amount_sum())
 
         # Priority
         if hasattr(self, 'high_priority'):
@@ -206,11 +205,21 @@ class Payment(AttributeCarrier):
             svclvl = etree.SubElement(tp_info, 'SvcLvl')
             etree.SubElement(svclvl, 'Cd').text = 'SEPA'
 
+
         # Execution date: either today or specified date
         execution_date = date.today()
         if hasattr(self, 'execution_date'):
             execution_date = self.execution_date
         etree.SubElement(info, 'ReqdExctnDt').text = execution_date.isoformat()
+
+
+        # Batch booking
+        if hasattr(self, 'batch'):
+            etree.SubElement(info, 'BtchBookg').text = booltext(self.batch)
+
+
+
+
 
         # Debtor information
         info.append(self.debtor.__tag__('Dbtr'))
