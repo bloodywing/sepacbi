@@ -102,6 +102,10 @@ class Payment(AttributeCarrier):
             self.account = Account(iban=self.account)
         assert isinstance(self.account, Account)
 
+        if isinstance(self.bic, basestring):
+            self.bic = Bank(bic=self.bic)
+        assert isinstance(self.bic, Bank)
+
         if hasattr(self, 'abi'):
             abi = self.abi
         elif self.account.iban[:2] == 'DE':
@@ -226,7 +230,8 @@ class Payment(AttributeCarrier):
         info.append(self.account.__tag__('DbtrAcct'))
 
         if self.bic:
-            info.append(self.bic.__tag__('CdtrAgt'))
+            agt = etree.SubElement(info, 'CdtrAgt')
+            agt.append(self.bic.__tag__())
 
         agent = etree.SubElement(info, 'DbtrAgt')
         agent.append(self.bank.__tag__(output_abi=True))
