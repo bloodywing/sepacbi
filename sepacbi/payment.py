@@ -222,13 +222,14 @@ class Payment(AttributeCarrier):
 
 
 
-
-
         # Debtor information
         info.append(self.debtor.__tag__('Dbtr'))
 
         # Debtor account
         info.append(self.account.__tag__('DbtrAcct'))
+
+        if self.bic:
+            info.append(self.bic.__tag__('CdtrAgt'))
 
         agent = etree.SubElement(info, 'DbtrAgt')
         agent.append(self.bank.__tag__(output_abi=True))
