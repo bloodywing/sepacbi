@@ -88,8 +88,9 @@ class Payment(AttributeCarrier):
 
     def gen_id(self):
         """Generate a unique ID for the payment"""
-        self.req_id = '%s%s' % (self.ID_PREFIX, datetime.now().strftime(
-            '%Y%m%d-%H%M%S'))
+        self.req_id = '%s' % (datetime.now())
+        # self.req_id = '%s%s' % (self.ID_PREFIX, datetime.now().strftime(
+        #     '%Y%m%d-%H%M%S'))
 
     def perform_checks(self):
         "Checks the validity of all supplied attributes."
