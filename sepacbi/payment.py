@@ -169,7 +169,9 @@ class Payment(AttributeCarrier):
             # attrib={'{%s}schemaLocation' % xsi: schema_location},
             attrib={},
             nsmap={'xsi': xsi, None: xmlns})
-        root = etree.SubElement(inner_root, 'CstmrCdtTrfInitn')
+        #root = etree.SubElement(inner_root, 'CstmrCdtTrfInitn')
+
+        root = etree.SubElement(inner_root, 'Document')
         outer = root
         if self.envelope:
             root = etree.SubElement(root, 'CBIEnvelPaymentRequest')
@@ -179,7 +181,8 @@ class Payment(AttributeCarrier):
     def emit_tag(self):
         "Returns the whole XML structure for the payment."
         # Outer XML structure
-        outer, root = self.get_xml_root()
+        outer, root2 = self.get_xml_root()
+        root = etree.Element('CstmrCdtTrfInitn')
         xmlns = 'urn:iso:std:iso:20022:tech:xsd:pain.001.003.03'
 
         # Header
@@ -258,6 +261,7 @@ class Payment(AttributeCarrier):
         for txr in self.transactions:
             info.append(txr.__tag__())
 
+        outer.append(root)
         return outer
 
     def xml(self):
@@ -270,7 +274,7 @@ class Payment(AttributeCarrier):
         """
         Return the XML structure as a string.
         """
-        return etree.tostring(self.xml(), **kwargs)
+        return etree.tostring(self.xml(), encoding="UTF-8", **kwargs)
 
     def cbi_text(self):
         self.perform_checks()
