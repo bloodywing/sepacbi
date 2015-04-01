@@ -240,7 +240,7 @@ class Payment(AttributeCarrier):
         info.append(self.account.__tag__('DbtrAcct'))
 
         if self.bic:
-            agt = etree.SubElement(info, 'CdtrAgt')
+            agt = etree.SubElement(info, 'DbtrAgt')
             agt.append(self.bic.__tag__())
 
         #agent = etree.SubElement(info, 'DbtrAgt')
