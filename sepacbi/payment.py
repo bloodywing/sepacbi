@@ -185,7 +185,7 @@ class Payment(AttributeCarrier):
         # Header
         header = etree.SubElement(root, 'GrpHdr', nsmap={None: xmlns})
         etree.SubElement(header, 'MsgId').text = self.req_id
-        etree.SubElement(header, 'CreDtTm').text = datetime.utcnow().isoformat() + 'Z'
+        etree.SubElement(header, 'CreDtTm').text = datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
         etree.SubElement(header, 'NbOfTxs').text = str(len(self.transactions))
         etree.SubElement(header, 'CtrlSum').text = str(self.amount_sum())
         initiator = self.get_initiator()
