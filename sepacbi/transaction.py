@@ -121,7 +121,7 @@ class Transaction(AttributeCarrier):
             amt, 'InstdAmt', attrib={'Ccy': 'EUR'}).text = str(self.amount)
         if hasattr(self, 'ultimate_debtor'):
             root.append(self.ultimate_debtor.__tag__('UltmtDbtr'))
-        if self.account.is_foreign() or self.bic:
+        if self.account.is_foreign() or getattr(self, 'bic', False):
             agt = etree.SubElement(root, 'CdtrAgt')
             agt.append(Bank(bic=self.bic).__tag__())
         root.append(self.creditor.__tag__('Cdtr'))
@@ -240,11 +240,3 @@ class Transaction(AttributeCarrier):
             if len(records) > 5:
                 raise Exception('Too many documents for remittance info')
         return records
-
-
-            
-
-
-
-
-

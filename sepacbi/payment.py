@@ -105,9 +105,10 @@ class Payment(AttributeCarrier):
             self.account = Account(iban=self.account, has_euro_attr=True)
         assert isinstance(self.account, Account)
 
-        if isinstance(self.bic, basestring):
-            self.bic = Bank(bic=self.bic)
-        assert isinstance(self.bic, Bank)
+        if self.account.is_foreign():
+            if isinstance(self.bic, basestring):
+                self.bic = Bank(bic=self.bic)
+            assert isinstance(self.bic, Bank)
 
         if hasattr(self, 'abi'):
             abi = self.abi
@@ -239,7 +240,7 @@ class Payment(AttributeCarrier):
         # Debtor account
         info.append(self.account.__tag__('DbtrAcct'))
 
-        if self.bic:
+        if getattr(self, 'bic', False):
             agt = etree.SubElement(info, 'DbtrAgt')
             agt.append(self.bic.__tag__())
 
@@ -313,6 +314,3 @@ class Payment(AttributeCarrier):
         records.append(footer.format())
         records.append(u'')
         return '\n'.join(records)
-
-
-
